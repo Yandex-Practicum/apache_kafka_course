@@ -1,0 +1,2 @@
+kafka-topics --create --topic test-topic --partitions 3 --replication-factor 3 --bootstrap-server kafka-1:1092 --command-config /etc/kafka/secrets/client.properties
+kafka-acls --bootstrap-server kafka-1:1092 --add --allow-principal User:'*' --operation WRITE --topic test-topic --command-config /etc/kafka/secrets/client.properties
