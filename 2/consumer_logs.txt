@@ -1,0 +1,24 @@
+🚀 Запуск Kafka-HDFS консьюмера
+===============================
+✅ Kafka доступен
+✅ Hadoop доступен
+📥 Чтение сообщений из топика hadoop-topic и запись в HDFS...
+
+🚀 Запускаю консьюмер...
+Received message: value=Привет из Kafka! Это первое сообщение, partition=hadoop-topic[0]@0
+2025/06/17 16:28:26 Failed to close HDFS file: create /data/message_10c9b69b-8e6a-4c47-8762-8b48f16697ff: replication in progress
+Message 'Привет из Kafka! Это первое сообщение' written to HDFS at path: '/data/message_10c9b69b-8e6a-4c47-8762-8b48f16697ff'
+Received message: value=Второе сообщение с данными для HDFS, partition=hadoop-topic[0]@1
+Message 'Второе сообщение с данными для HDFS' written to HDFS at path: '/data/message_1c4f1c5a-824e-446f-93bd-8f269817e5db'
+Received message: value=JSON данные: {"user": "Ivan", "action": "login", "timestamp": "2024-12-31T12:00:00Z"}, partition=hadoop-topic[0]@2
+Message 'JSON данные: {"user": "Ivan", "action": "login", "timestamp": "2024-12-31T12:00:00Z"}' written to HDFS at path: '/data/message_b6bccb31-1ece-4858-9ce7-645b9c4c18aa'
+Received message: value=CSV данные: user1,action1,2024-12-31 12:01:00, partition=hadoop-topic[0]@3
+Message 'CSV данные: user1,action1,2024-12-31 12:01:00' written to HDFS at path: '/data/message_175e5a93-e3f1-42d7-a083-dd3147fd39e6'
+Received message: value=Лог сообщение: [INFO] Пользователь успешно авторизован, partition=hadoop-topic[0]@4
+Message 'Лог сообщение: [INFO] Пользователь успешно авторизован' written to HDFS at path: '/data/message_38b9a321-2848-4ddc-b85d-a26f52524f1f'
+Received message: value=Метрики: CPU=75%, Memory=2.3GB, Disk=45%, partition=hadoop-topic[0]@5
+Message 'Метрики: CPU=75%, Memory=2.3GB, Disk=45%' written to HDFS at path: '/data/message_d68dfc7d-1a68-4310-b0c1-65dc18a18b93'
+Received message: value=Событие: Новый заказ #12345 на сумму 1500 рублей, partition=hadoop-topic[0]@6
+Message 'Событие: Новый заказ #12345 на сумму 1500 рублей' written to HDFS at path: '/data/message_34ebc97b-a228-4c64-8094-d4c32df083a9'
+Received message: value=Последнее тестовое сообщение для Hadoop интеграции, partition=hadoop-topic[0]@7
+Message 'Последнее тестовое сообщение для Hadoop интеграции' written to HDFS at path: '/data/message_3039a3ef-3acc-4d60-8668-2030bae627cd'

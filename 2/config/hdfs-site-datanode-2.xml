@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<configuration>
+   <property>
+       <name>dfs.datanode.data.dir</name>
+       <value>file:/usr/local/hadoop/hdfs/datanode</value>
+   </property>
+   <property>
+       <name>dfs.datanode.hostname</name>
+       <value>localhost</value>
+   </property>
+   <!-- RPC порт для запросов от NameNode -->
+   <property>
+       <name>dfs.datanode.address</name>
+       <value>0.0.0.0:9971</value>
+   </property>
+   <!-- HTTP-порт для Web UI DataNode №2 -->
+   <property>
+       <name>dfs.datanode.http.address</name>
+       <value>0.0.0.0:9865</value>
+   </property>
+</configuration>

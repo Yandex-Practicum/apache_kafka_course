@@ -1,0 +1,153 @@
+services:
+ zookeeper:
+   image: confluentinc/cp-zookeeper:7.4.4
+   container_name: zookeeper
+   hostname: zookeeper
+   ports:
+     - "2181:2181"
+   networks:
+     - cheburnet
+   environment:
+     ZOOKEEPER_SERVER_ID: 1
+     ZOOKEEPER_CLIENT_PORT: 2181
+     ZOOKEEPER_TICK_TIME: 2000
+     ZOOKEEPER_INIT_LIMIT: 5
+     ZOOKEEPER_SYNC_LIMIT: 2
+
+
+ kafka-1:
+   image: confluentinc/cp-kafka:7.4.4
+   container_name: kafka-1
+   hostname: kafka-1
+   depends_on:
+     - zookeeper
+   ports:
+     - "9092:9092"
+     - "9093:9093"
+   networks:
+     - cheburnet
+   environment:
+     KAFKA_BROKER_ID: 1
+     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+     KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+     KAFKA_DELETE_TOPIC_ENABLE: true
+     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+     KAFKA_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://0.0.0.0:9093
+     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:9093
+     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+
+ hadoop-namenode:
+   image: apache/hadoop:3.4.1
+   container_name: hadoop-namenode
+   hostname: hadoop-namenode
+   user: "root"
+   restart: always
+   platform: linux/amd64
+   networks:
+     - cheburnet
+   deploy:
+     resources:
+       limits:
+         cpus: "1.0"   # Ограничение использования CPU
+         memory: "2g"  # Ограничение использования RAM
+   shm_size: 10G
+   ports:
+     - "9870:9870"  # HTTP-порт для Web UI HDFS NameNode
+     - "9000:9000"  # RPC порт для запросов к NameNode
+   volumes:
+     - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+     - ./config/hdfs-site-namenode.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+     - ./namenode_entrypoint.sh:/namenode_entrypoint.sh
+   entrypoint: ["/bin/bash", "/namenode_entrypoint.sh"]
+   command: ["hdfs", "namenode"]
+
+
+ hadoop-datanode-1:
+   image: apache/hadoop:3.4.1
+   container_name: hadoop-datanode-1
+   hostname: hadoop-datanode-1
+   user: "root"
+   restart: always
+   platform: linux/amd64
+   networks:
+     - cheburnet
+   deploy:
+     resources:
+       limits:
+         cpus: "1.0"   # Ограничение использования CPU
+         memory: "2g"  # Ограничение использования RAM
+   shm_size: 10G
+   depends_on:
+     - hadoop-namenode
+   ports:
+     - "9864:9864"  # HTTP-порт для Web UI DataNode №1
+     - "9970:9970"  # RPC порт для запросов от NameNode
+   volumes:
+     - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+     - ./config/hdfs-site-datanode-1.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+     - ./datanode_entrypoint.sh:/datanode_entrypoint.sh
+   entrypoint: ["/bin/bash", "/datanode_entrypoint.sh"]
+   command: ["hdfs", "datanode"]
+
+
+ hadoop-datanode-2:
+   image: apache/hadoop:3.4.1
+   container_name: hadoop-datanode-2
+   hostname: hadoop-datanode-2
+   user: "root"
+   restart: always
+   platform: linux/amd64
+   networks:
+     - cheburnet
+   deploy:
+     resources:
+       limits:
+         cpus: "1.0"   # Ограничение использования CPU
+         memory: "2g"  # Ограничение использования RAM
+   shm_size: 10G
+   depends_on:
+     - hadoop-namenode
+   ports:
+     - "9865:9865"  # HTTP-порт для Web UI DataNode №2
+     - "9971:9971"  # RPC порт для запросов от NameNode
+   volumes:
+     - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+     - ./config/hdfs-site-datanode-2.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+     - ./datanode_entrypoint.sh:/datanode_entrypoint.sh
+   entrypoint: ["/bin/bash", "/datanode_entrypoint.sh"]
+   command: ["hdfs", "datanode"]
+
+
+ hadoop-datanode-3:
+   image: apache/hadoop:3.4.1
+   container_name: hadoop-datanode-3
+   hostname: hadoop-datanode-3
+   user: "root"
+   restart: always
+   platform: linux/amd64
+   networks:
+     - cheburnet
+   deploy:
+     resources:
+       limits:
+         cpus: "1.0"   # Ограничение использования CPU
+         memory: "2g"  # Ограничение использования RAM
+   shm_size: 10G
+   depends_on:
+     - hadoop-namenode
+   ports:
+     - "9866:9866"  # HTTP-порт для Web UI DataNode №3
+     - "9972:9972"  # RPC порт для запросов от NameNode
+   volumes:
+     - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+     - ./config/hdfs-site-datanode-3.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml
+     - ./datanode_entrypoint.sh:/datanode_entrypoint.sh
+   entrypoint: ["/bin/bash", "/datanode_entrypoint.sh"]
+   command: ["hdfs", "datanode"]
+
+
+networks:
+  cheburnet:
+   driver: bridge
