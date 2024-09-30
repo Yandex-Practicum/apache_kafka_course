@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "consumer"
+version = "0.1.0"
+description = ""
+authors = ["Sakharov Alexander <mail@asakharov.ru>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.0"
+aiokafka = "^0.12.0"
+pydantic-settings = "^2.8.1"
+confluent-kafka = {extras = ["avro"], version = "^2.9.0"}
+pydantic-avro = "^0.9.0"
+apscheduler = "^3.11.0"
+loguru = "^0.7.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

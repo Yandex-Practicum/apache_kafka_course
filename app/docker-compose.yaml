@@ -1,0 +1,49 @@
+version: "3.5"
+
+services:
+
+ kafka-tools:
+   image: bitnami/kafka:3.9
+   volumes:
+     - ./admin-config.conf:/admin-config.conf:ro
+     - ./ca.crt:/ca.crt:ro
+
+ producer:
+    build: 
+      context: producer
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    environment:
+      - PRODUCER_KAFKA_TOPIC=kafka-topic
+      - PRODUCER_KAFKA_USER=kafka-user
+      - PRODUCER_KAFKA_CA_PATH=/ca.crt
+    networks:
+      - proxynet
+    volumes:
+      - ./ca.crt:/ca.crt:ro
+
+ consumer:
+    build: 
+      context: consumer
+    env_file:
+      - .env
+    environment:
+      - CONSUMER_KAFKA_TOPIC=kafka-topic
+      - CONSUMER_GROUP_ID=single-group
+      - CONSUMER_MESSAGES_BATCH_MIN=1
+      - CONSUMER_MESSAGES_BATCH_MAX=1
+      - CONSUMER_AUTO_COMMIT=true
+      - CONSUMER_POLL_INTERVAL_SECONDS=10
+      - CONSUMER_KAFKA_USER=kafka-user
+      - CONSUMER_KAFKA_CA_PATH=/ca.crt
+    networks:
+      - proxynet
+    volumes:
+      - ./ca.crt:/ca.crt:ro
+
+networks:
+ proxynet:
+   name: custom_network
+

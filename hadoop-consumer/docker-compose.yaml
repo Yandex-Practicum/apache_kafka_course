@@ -1,0 +1,27 @@
+version: "3.5"
+
+services:
+ hadoop-consumer:
+    build: 
+      context: consumer
+    env_file:
+      - .env
+    environment:
+      - CONSUMER_KAFKA_TOPIC=kafka-topic
+      - CONSUMER_GROUP_ID=hadoop-group
+      - CONSUMER_MESSAGES_BATCH_MIN=1
+      - CONSUMER_MESSAGES_BATCH_MAX=1
+      - CONSUMER_AUTO_COMMIT=true
+      - CONSUMER_POLL_INTERVAL_SECONDS=10
+      - CONSUMER_KAFKA_USER=kafka-user
+      - CONSUMER_KAFKA_CA_PATH=/ca.crt
+      - CONSUMER_HADOOP_ENDPOINT=http://51.250.68.3:9870
+    networks:
+      - proxynet
+    volumes:
+      - ./ca.crt:/ca.crt:ro
+
+networks:
+ proxynet:
+   name: hadoop_default
+   external: true
