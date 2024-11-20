@@ -1,0 +1,7 @@
+env: "local" 
+kafka:
+  kafkaUrl: "localhost:29092,localhost:39092"
+  schemaRegistryUrl: "http://localhost:8081"
+  topic: "users"
+  type: "consumer-pull"
+  groupId: "group_2"
