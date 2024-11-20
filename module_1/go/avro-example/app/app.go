@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 	"errors"
-	"lesson1/avro-example/app/consumer"
-	"lesson1/avro-example/app/producer"
-	"lesson1/avro-example/internal/config"
-	"lesson1/avro-example/internal/logger"
+
+	"github.com/apache_kafka_course/module1/go/avro-example/app/consumer"
+	"github.com/apache_kafka_course/module1/go/avro-example/app/producer"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/config"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/logger"
 )
 
 var ErrWrongType = errors.New("wrong type")

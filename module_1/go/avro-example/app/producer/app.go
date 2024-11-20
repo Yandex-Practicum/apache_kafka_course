@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"lesson1/avro-example/internal/broker/producer"
-	"lesson1/avro-example/internal/config"
-	"lesson1/avro-example/internal/dto"
 	"log"
 	"log/slog"
+
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/broker/producer"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/config"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/dto"
 )
 
 type sendCloser interface {

@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"lesson1/avro-example/app"
 	"log"
 	"os/signal"
 	"syscall"
+
+	"github.com/apache_kafka_course/module1/go/avro-example/app"
 )
 
 func main() {

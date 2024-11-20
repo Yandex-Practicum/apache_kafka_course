@@ -2,12 +2,12 @@ package consumer
 
 import (
 	"context"
-	"lesson1/avro-example/internal/config"
 	"log/slog"
 	"time"
 
-	consumerpull "lesson1/avro-example/internal/broker/consumer/pull"
-	consumerpush "lesson1/avro-example/internal/broker/consumer/push"
+	consumerpull "github.com/apache_kafka_course/module1/go/avro-example/internal/broker/consumer/pull"
+	consumerpush "github.com/apache_kafka_course/module1/go/avro-example/internal/broker/consumer/push"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/config"
 )
 
 type consumeCloser interface {

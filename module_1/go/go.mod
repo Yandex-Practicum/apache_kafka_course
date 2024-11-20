@@ -1,4 +1,4 @@
-module lesson1
+module github.com/apache_kafka_course/module1/go
 
 go 1.23.3
 

@@ -24,7 +24,7 @@ go mod tidy
 ### Запуск
 1. Запустите инфраструктуру
 ```bash
-cd ../infra && docker compose up -d
+cd ./infra && docker compose up -d
 ```
 
 2. Создайте топик и проверьте его конфигурацию:
@@ -36,6 +36,13 @@ cd ../infra && docker compose up -d
 
 ```bash
 docker exec -it kafka-1 ../../usr/bin/kafka-topics  --describe --topic users  --bootstrap-server localhost:9092
+```
+Ожидаемый результат:
+```
+Topic: users    TopicId: YEE8ywCDR2mWWht0TNlZsw PartitionCount: 3       ReplicationFactor: 2    Configs: 
+        Topic: users    Partition: 0    Leader: 2       Replicas: 2,1   Isr: 2,1
+        Topic: users    Partition: 1    Leader: 1       Replicas: 1,2   Isr: 1,2
+        Topic: users    Partition: 2    Leader: 2       Replicas: 2,1   Isr: 2,1
 ```
 
 3. Запустите Producer:

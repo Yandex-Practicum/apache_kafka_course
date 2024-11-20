@@ -1,9 +1,10 @@
 package producer
 
 import (
-	"lesson1/avro-example/internal/config"
-	"lesson1/avro-example/internal/dto"
 	"log/slog"
+
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/config"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/dto"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/confluentinc/confluent-kafka-go/v2/schemaregistry"
