@@ -1,0 +1,168 @@
+run:
+  tests: true
+
+issues:
+  max-same-issues: 0
+
+linters-settings:
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  depguard:
+    rules:
+      main:
+        deny:
+          - pkg: "github.com/pkg/errors"
+            desc: Should be replaced by standard lib errors package
+
+  godox:
+    keywords:
+      - FIXME
+      - TODO
+
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+      - shadow
+
+  lll:
+    line-length: 120
+
+  nolintlint:
+    allow-no-explanation: [ "lll" ]
+    require-explanation: true
+
+  revive:
+    severity: error
+    rules:
+      - name: argument-limit
+      - name: atomic
+      - name: bare-return
+      - name: blank-imports
+      - name: bool-literal-in-expr
+      - name: comment-spacings
+      - name: confusing-results
+      - name: context-as-argument
+        arguments:
+          - allowTypesBefore: "*testing.T" # https://go-review.googlesource.com/c/lint/+/145237
+      - name: context-keys-type
+      - name: datarace
+      - name: deep-exit
+      - name: defer
+      - name: dot-imports
+      - name: duplicated-imports
+      - name: early-return
+      - name: empty-lines
+      - name: empty-block
+      - name: error-naming
+      - name: error-return
+      - name: error-strings
+      - name: errorf
+      - name: exported
+      - name: identical-branches
+      - name: if-return
+      - name: increment-decrement
+      - name: indent-error-flow
+      - name: package-comments
+      - name: range
+      - name: range-val-address
+      - name: range-val-in-closure
+      - name: receiver-naming
+      - name: redefines-builtin-id
+      - name: string-of-int
+      - name: superfluous-else
+      - name: time-equal
+      - name: time-naming
+      - name: unexported-return
+      - name: unhandled-error
+        arguments: [ "fmt.Fprint", "fmt.Printf", "fmt.Println" ]
+      - name: unreachable-code
+      - name: use-any
+      - name: unused-parameter
+      - name: var-declaration
+      - name: var-naming
+      - name: waitgroup-by-value
+
+  tagliatelle:
+    # Check the struck tag name case.
+    case:
+      # Use the struct field name to check the name of the struct tag.
+      # Default: false
+      use-field-name: false
+      rules:
+        # Any struct tag type can be used.
+        # Support string case: `camel`, `pascal`, `kebab`, `snake`, `upperSnake`, `goCamel`, `goPascal`, `goKebab`, `goSnake`, `upper`, `lower`, `header`.
+        json: camel
+        toml: snake
+
+linters:
+  disable-all: true
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - depguard
+    - durationcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - exhaustive
+    - exportloopref
+    - ginkgolinter
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - gofumpt
+    - goheader
+    - goimports
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - importas
+    - ineffassign
+    - inamedparam
+    - lll
+    - makezero
+    - misspell
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnil
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sloglint
+    - staticcheck
+    - stylecheck
+    - sqlclosecheck
+    - tagliatelle
+    - tenv
+    - testableexamples
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - wastedassign
+    - whitespace
