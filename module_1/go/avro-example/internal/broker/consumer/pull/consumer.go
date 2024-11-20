@@ -2,10 +2,11 @@ package pull
 
 import (
 	"context"
-	"lesson1/avro-example/internal/config"
-	"lesson1/avro-example/internal/dto"
 	"log/slog"
 	"time"
+
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/config"
+	"github.com/apache_kafka_course/module1/go/avro-example/internal/dto"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/confluentinc/confluent-kafka-go/v2/schemaregistry"
@@ -31,15 +32,15 @@ type Broker struct {
 	deserializer serde.Deserializer
 	log          *slog.Logger
 	cfg          *config.Config
-	dataChan     chan *dto.User
 }
 
 // New returns kafka consumer with schema registry.
 func New(cfg *config.Config, log *slog.Logger) (*Broker, error) {
 	confluentConsumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": cfg.Kafka.KafkaURL,
-		"group.id":          cfg.Kafka.GroupID,
-		"auto.offset.reset": "earliest",
+		"bootstrap.servers":  cfg.Kafka.KafkaURL,
+		"group.id":           cfg.Kafka.GroupID,
+		"enable.auto.commit": false,
+		"auto.offset.reset":  "earliest",
 	})
 	if err != nil {
 		return nil, err
@@ -59,27 +60,11 @@ func New(cfg *config.Config, log *slog.Logger) (*Broker, error) {
 	if err != nil {
 		return nil, err
 	}
-	dataChan := make(chan *dto.User, 10)
-
-	go func() {
-		for {
-			data := <-dataChan
-			// обработка данных
-			log.Info(
-				"Message processed",
-				"message", data,
-			)
-			// Эмулируем задержку на обработку данных
-			time.Sleep(10 * time.Second)
-		}
-	}()
-
 	broker := &Broker{
 		consumer:     confluentConsumer,
 		deserializer: deser,
 		log:          log,
 		cfg:          cfg,
-		dataChan:     dataChan,
 	}
 	return broker, nil
 }
@@ -119,8 +104,17 @@ func (b *Broker) Consume() error {
 				"Message received",
 				"topic", e.TopicPartition, "message", msg,
 			)
-			// отправка данных в канал
-			b.dataChan <- &msg
+			// эмулируем обработку данных
+			time.Sleep(5 * time.Second)
+			b.log.Info(
+				"Message processed",
+				"topic", e.TopicPartition, "message", msg,
+			)
+			_, err = b.consumer.Commit()
+			if err != nil {
+				b.log.Error("Failed to commit message", "err", err.Error())
+				return err
+			}
 		}
 
 	case kafka.Error:
