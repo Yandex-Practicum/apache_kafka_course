@@ -24,6 +24,11 @@
    ```
 ## Тестирование
 1. Запустите приложение
+   ```bash
+   cd src
+   faust -A message_processor worker -l INFO
+   ```
+   
 2. Установите список заблокированных пользователей
    ```bash
     docker exec -it kafka-1 kafka-console-producer --broker-list kafka-1:9092 --topic blocked_users --property "parse.key=true" --property "key.separator=:"
