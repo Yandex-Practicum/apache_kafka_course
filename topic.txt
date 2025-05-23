@@ -1,0 +1,9 @@
+Команда: docker exec -it kafka-1 ../../usr/bin/kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions
+          3 --replication-factor 2
+
+Вывод по топику:
+PS C:\Users\-\IdeaProjects\Kafka_course_module_1> docker exec -it kafka_course_module_1_broker-1_1 ../../usr/bin/kafka-topics --describe --topic test-topic  --bootstrap-server localhost:9092
+Topic: test-topic       TopicId: WHH4P3r1Q2OT_N8H4Kdzsw PartitionCount: 3       ReplicationFactor: 2    Configs:
+        Topic: test-topic       Partition: 0    Leader: 1       Replicas: 1,2   Isr: 1,2
+        Topic: test-topic       Partition: 1    Leader: 2       Replicas: 2,1   Isr: 2,1
+        Topic: test-topic       Partition: 2    Leader: 1       Replicas: 1,2   Isr: 1,2
