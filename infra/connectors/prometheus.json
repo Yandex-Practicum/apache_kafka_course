@@ -1,0 +1,9 @@
+{
+ "name": "prometheus-sink",
+ "config": {
+   "topics": "metrics",
+   "confluent.topic.bootstrap.servers": "localhost:9092",
+   "prometheus.listener.url": "http://localhost:8081/metrics",
+   "reporter.result.topic.replication.factor": "1"
+ }
+}

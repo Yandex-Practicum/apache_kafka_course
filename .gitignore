@@ -1,0 +1,12 @@
+/infra/confluent-hub-components/connect-file-3.9.0.jar
+/infra/confluent-hub-components/kafka-connect-jdbc-10.8.0.jar
+/infra/confluent-hub-components/postgresql-42.4.4.jar
+/.idea/modules.xml
+/.idea/.gitignore
+/.idea/live.iml
+/infra/kafka-connect/jmx_prometheus_javaagent-0.15.0.jar
+/.idea/vcs.xml
+/infra/confluent-hub-components/*
+/.env
+/.idea/.name
+/.idea/kafka-connect.iml
