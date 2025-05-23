@@ -1,0 +1,26 @@
+{
+  "Alloc": {
+    "Type": "gauge",
+    "Name": "Alloc",
+    "Description": "Alloc is bytes of allocated heap objects.",
+    "Value": 24293912
+  },
+  "FreeMemory": {
+    "Type": "gauge",
+    "Name": "FreeMemory",
+    "Description": "RAM available for programs to allocate",
+    "Value": 7740977152
+  },
+  "PollCount": {
+    "Type": "counter",
+    "Name": "PollCount",
+    "Description": "PollCount is quantity of metrics collection iteration.",
+    "Value": 3
+  },
+  "TotalMemory": {
+    "Type": "gauge",
+    "Name": "TotalMemory",
+    "Description": "Total amount of RAM on this system",
+    "Value": 16054480896
+  }
+}

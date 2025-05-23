@@ -1,0 +1,9 @@
+{
+  "name": "prometheus-connector",
+  "config": {
+    "topics": "prometheus-topic",
+    "port" : "8095",
+    "tasks.max": "1",
+    "connector.class": "PrometheusSinkConnector"
+  }
+}
