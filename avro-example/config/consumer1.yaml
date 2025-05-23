@@ -1,0 +1,8 @@
+env: "local" 
+kafka:
+  kafkaUrl: "localhost:29092,localhost:39092,localhost:49092"
+  schemaRegistryUrl: "http://localhost:8081"
+  topic: "users"
+  type: "consumer-single"
+  groupId: "group_1"
+  timeout: 100
