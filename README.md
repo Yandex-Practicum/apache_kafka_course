@@ -21,28 +21,3 @@
 |         17         |   92000    |     0     |      snappy      |   33554432    |                132                 |
 |         18         |   16384    |    80     |      snappy      |   33554432    |                149                 |
 
-
-## Задание 2
-1. Собрать проект
-```bash
-mvn clean package
-```
-2. Переместить собранный артефакт module3-0.0.1-SNAPSHOT.jar в папку infra/confluent-hub-components
-3. Запустить докер и проект из папки infra 
-```bash
-docker compose up
-```
-4. Перейти в графану по пути localhost:3000 и импортировать infra/grafana/dashboards/Kafka Connect WithCustom.json. 
-Первые 4 панели настроены на получение метрик из кастомного коннектора.
-5. Запустить коннектор
-```bash
-curl -X POST "http://localhost:8083/connectors" \
-     -H "Content-Type: application/json" \
-     --data "@custom_connector_settings.json" | jq
-```
-6. Забросить в топик prometheus-topic пример сообщения и убедится, что данные появились на дешборде
-```bash
-cat task2_sample.json | tr -d '\n' | kafka-console-producer.sh --broker-list localhost:9095 --topic prometheus-topic
-```
-## Задание 3
-Лог находится в файле debezium.log
