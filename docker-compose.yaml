@@ -1,0 +1,117 @@
+x-common-env: &x-common-env
+  KAFKA_NODE_ID: 1
+  KAFKA_ENABLE_KRAFT: yes
+  ALLOW_PLAINTEXT_LISTENER: yes
+  CLUSTER_ID: 'ciWo7IWazngRchmPES6q5A=='
+  KAFKA_PROCESS_ROLES: "broker,controller"
+  KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka-1:29093,2@kafka-2:29093,3@kafka-3:29093"
+  KAFKA_LISTENERS: "CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9092"
+  KAFKA_ADVERTISED_LISTENERS: "EXTERNAL://kafka-1:9092"
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,EXTERNAL:SASL_SSL"
+  KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+  KAFKA_INTER_BROKER_LISTENER_NAME: "EXTERNAL"
+  
+  KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/kafka.keystore.jks
+  KAFKA_SSL_KEYSTORE_PASSWORD: password
+  KAFKA_SSL_KEY_PASSWORD: password
+  KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/kafka.truststore.jks
+  KAFKA_SSL_TRUSTSTORE_PASSWORD: password
+  KAFKA_SSL_CLIENT_AUTH: required
+  KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+  KAFKA_SECURITY_PROTOCOL: "SASL_SSL"
+
+  KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf"
+  KAFKA_SUPER_USERS: "User:admin;User:kafka;User:kafka1;User:kafka2;User:kafka3"
+  KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+  KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+  KAFKA_SASL_SERVER_CALLBACK_HANDLER_CLASS: org.apache.kafka.common.security.plain.PlainLoginModule
+
+  KAFKA_LOG4J_ROOT_LOGLEVEL: "INFO"
+  KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+  KAFKA_DELETE_TOPIC_ENABLE: "true"
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+  KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+  KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+
+services:
+  kafka-1:
+    image: confluentinc/cp-kafka:7.4.4
+    restart: always
+    container_name: kafka-1
+    hostname: kafka-1
+    ports:
+      - "9092:9092"
+      - "29093:29093"
+    networks:
+      - task_2_network
+    volumes:
+      - ./kafka-1:/etc/kafka/secrets
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: "EXTERNAL://kafka-1:9092"
+      <<: *x-common-env
+
+  kafka-2:
+    image: confluentinc/cp-kafka:7.4.4
+    restart: always
+    container_name: kafka-2
+    hostname: kafka-2
+    ports:
+      - "9094:9092"
+      - "29094:29093"
+    networks:
+      - task_2_network
+    volumes:
+      - ./kafka-2:/etc/kafka/secrets
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_ADVERTISED_LISTENERS: "EXTERNAL://kafka-2:9092"
+      <<: *x-common-env
+
+  kafka-3:
+    image: confluentinc/cp-kafka:7.4.4
+    restart: always
+    container_name: kafka-3
+    hostname: kafka-3
+    ports:
+      - "9096:9092"
+      - "29095:29093"
+    networks:
+      - task_2_network
+    volumes:
+      - ./kafka-3:/etc/kafka/secrets
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_ADVERTISED_LISTENERS: "EXTERNAL://kafka-3:9092"
+      <<: *x-common-env
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SASL_SSL
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: PLAIN
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/kafka.truststore.jks
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD: password
+    volumes:
+      - ./kafka-1:/etc/kafka/secrets
+    networks:
+      - task_2_network
+
+networks:
+  task_2_network:
+    driver: bridge
+
+volumes:
+  kafka-1-data:
+  kafka-2-data:
+  kafka-3-data:
