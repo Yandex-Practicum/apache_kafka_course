@@ -1,0 +1,143 @@
+services:
+  x-kafka-common:
+    &kafka-common
+    image: bitnami/kafka:3.9
+    environment:
+      &kafka-common-env
+      KAFKA_ENABLE_KRAFT: yes
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka-0:9094,1@kafka-1:9094,2@kafka-2:9094
+      KAFKA_KRAFT_CLUSTER_ID: practicum
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,CONTROLLER:SSL
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: SSL
+      KAFKA_CFG_SSL_CLIENT_AUTH: none
+      KAFKA_CFG_SSL_TRUSTSTORE_LOCATION: /bitnami/kafka/config/certs/kafka.truststore.jks
+      KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD: kafka-password
+      KAFKA_CFG_SSL_KEYSTORE_LOCATION: /bitnami/kafka/config/certs/kafka.keystore.jks
+      KAFKA_CFG_SSL_KEYSTORE_PASSWORD: kafka-password
+      KAFKA_CFG_SSL_KEY_PASSWORD: kafka-password
+      KAFKA_CFG_AUTHORIZER_CLASS_NAME: org.apache.kafka.metadata.authorizer.StandardAuthorizer
+      KAFKA_CFG_ALLOW_EVERYONE_IF_NO_ACL_FOUND: true
+      KAFKA_CFG_SUPER_USERS: User:ANONYMOUS
+      BITNAMI_DEBUG: true
+    networks:
+      - kafka_net
+
+  kafka-0:
+    <<: *kafka-common
+    hostname: kafka-0
+    container_name: kafka-0
+    ports:
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      <<: *kafka-common-env
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_LISTENERS: SSL://kafka-0:9093,CONTROLLER://kafka-0:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: SSL://kafka-0:9093,CONTROLLER://kafka-0:9094
+    volumes:
+      - kafka_0_data:/bitnami/kafka
+      - ./kafka-0-creds:/bitnami/kafka/config/certs:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-0:9093 --list --command-config /bitnami/kafka/config/certs/client.properties" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - kafka_net
+
+  kafka-1:
+    <<: *kafka-common
+    hostname: kafka-1
+    container_name: kafka-1
+    ports:
+      - "19093:9093"
+      - "19094:9094"
+    environment:
+      <<: *kafka-common-env
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_LISTENERS: SSL://kafka-1:9093,CONTROLLER://kafka-1:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: SSL://kafka-1:9093,CONTROLLER://kafka-1:9094
+    volumes:
+      - kafka_1_data:/bitnami/kafka
+      - ./kafka-1-creds:/bitnami/kafka/config/certs:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-1:9093 --list --command-config /bitnami/kafka/config/certs/client.properties" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - kafka_net
+
+  kafka-2:
+    <<: *kafka-common
+    hostname: kafka-2
+    container_name: kafka-2
+    ports:
+      - "29093:9093"
+      - "29094:9094"
+    environment:
+      <<: *kafka-common-env
+      KAFKA_CFG_NODE_ID: 2
+      KAFKA_CFG_LISTENERS: SSL://kafka-2:9093,CONTROLLER://kafka-2:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: SSL://kafka-2:9093,CONTROLLER://kafka-2:9094
+    volumes:
+      - kafka_2_data:/bitnami/kafka
+      - ./kafka-2-creds:/bitnami/kafka/config/certs:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka-2:9093 --list --command-config /bitnami/kafka/config/certs/client.properties" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - kafka_net
+
+  kafka-setup:
+    image: bitnami/kafka:3.9
+    working_dir: /setup
+    user: root
+    volumes:
+      - ./setup:/setup:ro
+      - ./kafka-0-creds:/certs:ro
+    environment:
+      KAFKA_CFG_BOOTSTRAP_SERVERS: kafka-0:9093,kafka-1:9093,kafka-2:9093
+    command: sh /setup/setup-kafka.sh
+    depends_on:
+      kafka-0:
+        condition: service_healthy
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+    networks:
+      - kafka_net
+
+  producer-consumer:
+    image: golang:1.24-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./clients-creds:/app/clients-creds
+      - ./ca.crt:/app/ca.crt:ro
+    environment:
+      - CGO_ENABLED=1
+    command: sh -c "apk add --no-cache build-base librdkafka-dev && go build -tags musl -o main . && ./main"
+    depends_on:
+      kafka-setup:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    networks:
+      - kafka_net
+
+networks:
+  kafka_net:
+    driver: bridge
+
+volumes:
+  kafka_0_data:
+  kafka_1_data:
+  kafka_2_data:
