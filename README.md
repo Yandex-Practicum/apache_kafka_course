@@ -6,8 +6,7 @@
 
 - **Kafka**: Брокер сообщений для потоковой передачи данных
 - **Hadoop HDFS**: Распределенная файловая система для хранения данных
-- **Producer**: Go приложение для отправки сообщений в Kafka
-- **Consumer**: Go приложение для чтения из Kafka и записи в HDFS
+- **Consumer**: приложение для чтения из Kafka и записи в HDFS
 
 ## Компоненты
 
@@ -36,13 +35,9 @@ docker-compose ps
 #### Отдельные скрипты:
 
 ```bash
-# Запуск продюсера (отправка сообщений)
-chmod +x run_producer.sh
-./run_producer.sh
-
 # Запуск консьюмера (чтение и запись в HDFS)
-chmod +x run_consumer.sh
-./run_consumer.sh
+chmod +x run_kafka_hdfs_consumer.sh
+./run_kafka_hdfs_consumer.sh
 ```
 
 ### 3. Полный тест интеграции
