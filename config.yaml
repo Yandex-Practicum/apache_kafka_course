@@ -1,0 +1,24 @@
+# Конфигурация для Kafka to HDFS процессора
+
+kafka:
+  # Адреса Kafka брокеров
+  bootstrap_servers: 
+    - "localhost:9094"  # Внешний порт для подключения с хоста
+  # Топик для чтения
+  topic: "test-topic"
+  # ID группы потребителей
+  group_id: "kafka-to-hdfs-group"
+  # Настройки consumer
+  auto_offset_reset: "earliest"  # earliest или latest
+  enable_auto_commit: true
+
+hdfs:
+  # URL HDFS namenode
+  url: "http://localhost:9870"  # Web UI порт
+  # Пользователь для подключения к HDFS
+  user: "root"
+
+# Настройки логирования
+logging:
+  level: "INFO"
+  file: "kafka_to_hdfs.log" 

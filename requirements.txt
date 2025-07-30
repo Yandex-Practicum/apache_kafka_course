@@ -1,0 +1,13 @@
+# Зависимости для Kafka to HDFS процессора
+
+# Kafka клиент
+kafka-python==2.0.2
+
+# HDFS клиент
+hdfs==2.6.0
+
+# YAML парсер для конфигурации
+PyYAML==6.0.1
+
+# HTTP клиент для health check
+requests==2.31.0 
