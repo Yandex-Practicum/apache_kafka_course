@@ -18,4 +18,4 @@
        <name>dfs.datanode.http.address</name>
        <value>0.0.0.0:9865</value>
    </property>
-</configuration>
+</configuration> 

@@ -8,4 +8,4 @@
        <name>dfs.namenode.name.dir</name>
        <value>file:/usr/local/hadoop/hdfs/namenode</value>
    </property>
-</configuration>
+</configuration> 
